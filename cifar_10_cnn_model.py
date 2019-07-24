@@ -70,4 +70,5 @@ def main():
     summary_scores(scores)
     _, acc = model.evaluate(x_test, y_test)
     print(f'Final Test acc is {acc}')
+    print(y_train.class_indexes)
 main()
