@@ -13,7 +13,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
 
 
-#Number of type of photos
+#Better Printing for debugging
 
 np.set_printoptions(threshold=sys.maxsize)
 
