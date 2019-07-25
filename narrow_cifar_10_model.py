@@ -17,6 +17,7 @@ from tensorflow.keras.datasets import cifar10
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
 import operator
+import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
@@ -71,6 +72,7 @@ def prep_data(x_train, x_test, y_train, y_test):
     y_test = to_categorical(y_test)
     x_train, y_train = shuffle(x_train, y_train)
     x_test, y_test = shuffle(x_test, y_test)
+    #return list(x_train), list(x_test), list(y_train), list(y_test)
     return x_train, x_test, y_train, y_test
 
 def build_model():
@@ -83,7 +85,7 @@ def build_model():
     classifier.add(Dropout(0.5))
     classifier.add(Flatten())
     classifier.add(Dense(units=128, kernel_initializer='uniform', activation='relu'))
-    classifier.add(Dropout(0.5))
+    #classifier.add(Dropout(0.5))
     classifier.add(Dense(units=4, activation='softmax', kernel_initializer='uniform'))
     classifier.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     return classifier
@@ -93,6 +95,8 @@ def train_model(model, datax, datay, n_folds=3, bs=32, epochs=25):
     kfold = KFold(n_folds, shuffle=True)
 
     for i_train, i_test in kfold.split(datax):
+        #print(i_train[:20])
+        #print(i_test[:20])
         x_train, y_train, x_test, y_test = datax[i_train], datay[i_train], datax[i_test], datay[i_test]
         model.fit(x_train, y_train, epochs=epochs, batch_size=bs, validation_data=(x_test, y_test), shuffle=True)
         _,acc = model.evaluate(x_test, y_test)
@@ -107,10 +111,9 @@ def main():
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
     x_train, x_test, y_train, y_test = prep_data(x_train, x_test, y_train, y_test)
     model = build_model()
-    scores, model = train_model(model,x_train, y_train, n_folds=5, bs=48, epochs=50)
+    scores, model = train_model(model,x_train, y_train, n_folds=5, bs=32, epochs=25)
     _, acc = model.evaluate(x_test, y_test)
     summary_scores(scores)
     print(f'Final Test acc is {acc}')
-    
-
+    model.save("narrow_model.h5")
 main()
