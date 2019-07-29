@@ -76,4 +76,4 @@ def train_cnn(width=64, height=64, bs=32, epochs=100):
     with open('cnn_data_storage.txt', 'a') as file:
         file.write(f'\nOn the day of {date.today()}, the format is {training_set.class_indices} and the model predicted {prediction} for a dog photo\n')
 
-train_cnn(epochs=300)
+train_cnn(epochs=10)
